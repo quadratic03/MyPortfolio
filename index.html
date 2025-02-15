@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="mode-toggle">
+    <button id="toggleMode">🌙</button>
+  </div>
+
+  <header>
+    <div class="profile-container">
+      <img src="assets/profile.png" alt="Profile Picture" class="profile-image" id="profilePicture">
+      <h1 class="name">Roberth Namoc</h1>
+      <p class="tagline">Front-End Designer | Web & System Developer</p>
+    </div>
+  </header>
+
+ 
+  <div id="profileDialog" class="dialog">
+    <div class="dialog-content">
+      <h2>My Details</h2>
+      <p><strong>Name:</strong> Roberth Namoc</p>
+      <p><strong>Age:</strong> 24</p>
+      <p><strong>Email:</strong> Kristinedais10@gmail.com</p>
+      <p><strong>Contact:</strong> +639853234710</p>
+      <p><strong>Location:</strong> Cagayan de oro, Philippines</p>
+      <button id="backButton" class="back-btn">Back</button>
+    </div>
+  </div>
+
+  <section id="about">
+    <h2>About Me</h2>
+    <p>
+      I am an IT student with a passion for designing and developing user-friendly websites and systems. 
+      I have completed numerous projects that showcase my skills in front-end design, web development, 
+      and system architecture.
+    </p>
+  </section>
+
+  <section id="skills">
+    <h2>Skills</h2>
+    <ul class="skills-list">
+      <li data-video="assets/videos/html5.mp4">HTML5</li>
+      <li data-video="assets/videos/css3.mp4">CSS3</li>
+      <li data-video="assets/videos/javascript.mp4">JavaScript (ES6+)</li>
+      <li data-video="assets/videos/reactjs.mp4">React.js</li>
+      <li>Node.js</li>
+      <li>Express.js</li>
+      <li>MongoDB</li>
+      <li>Git & GitHub</li>
+      <li>Responsive Design</li>
+      <li>UI/UX Design</li>
+      <li>SQL/Database</li>
+      <li>Dart(Flutter)</li>
+    </ul>
+  </section>
+
+  <section id="projects">
+    <h2>Projects</h2>
+    <div class="project-grid">
+      <div class="project-card">
+        <h3>Project 1: E-commerce Website</h3>
+        <p>A fully functional e-commerce platform built using React.js and Node.js.</p>
+      </div>
+      <div class="project-card">
+        <h3>Project 2: Task Management System</h3>
+        <p>A task management application designed with MongoDB and Express.js.</p>
+      </div>
+      <div class="project-card">
+        <h3>Project 3: Personal Portfolio</h3>
+        <p>This portfolio website showcasing my skills and projects.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy;Property of NAMOC ROBERTH</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
