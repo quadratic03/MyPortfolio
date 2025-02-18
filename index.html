@@ -5,83 +5,480 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portfolio</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    footer {
+      text-align: center;
+      padding: 1em;
+      background-color: #333;
+      color: white;
+      position: relative;
+      z-index: 1;
+    }
+
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(255, 0, 0, 0.5), rgba(255, 255, 0, 0.5));
+      filter: blur(10px);
+      z-index: -1;
+      opacity: 0.7;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        opacity: 0.7;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .skills-list li {
+      list-style: none;
+      padding: 10px 20px;
+      background: rgba(0, 0, 0, 0.1); /* Adjusted for better visibility in light mode */
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s, background 0.5s, filter 0.5s, color 0.5s;
+      color: black; /* Text color for light mode */
+    }
+
+    .skills-list li:hover {
+      transform: scale(1.1);
+    }
+
+    .skills-list li.explode {
+      animation: explode 0.5s forwards;
+    }
+
+    @keyframes explode {
+      to {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
+    .skills-list li.smoke {
+      position: relative;
+    }
+
+    .skills-list li.smoke::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      animation: smoke 1s forwards;
+    }
+
+    @keyframes smoke {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.5);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.5);
+      }
+    }
+
+    .skills-list li.fade-out {
+      animation: fadeOut 1s forwards;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+      }
+    }
+
+    .night-mode .skills-list li {
+      background: rgba(0, 0, 0, 0.2);
+      filter: invert(1);
+      color: white; /* Text color for dark mode */
+    }
+
+    .profile-container {
+      position: relative;
+      text-align: center;
+      color: white;
+      padding: 50px 0;
+      background: url('assets/night.jpg') no-repeat center center/cover;
+      transition: background 0.5s;
+      border-radius: 15px; /* Added to make the edges less sharp */
+      overflow: hidden; /* Ensure the rounded corners are visible */
+    }
+
+    .profile-container.night-mode {
+      background: url('assets/night.jpg') no-repeat center center/cover;
+    }
+
+    .profile-container.light-mode {
+      background: #2e2e2e; /* Dark grey background for light mode */
+    }
+
+    .profile-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5); /* Optional: Add a dark overlay for better text visibility */
+    }
+
+    .profile-container > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .social-media {
+      margin-top: 20px;
+    }
+
+    .social-media a {
+      margin: 0 10px;
+      display: inline-block;
+    }
+
+    .social-media img {
+      width: 40px;
+      height: 40px;
+      transition: transform 0.3s;
+    }
+
+    .social-media img:hover {
+      transform: scale(1.2);
+    }
+
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    #skills {
+      position: relative;
+      overflow: hidden;
+    }
+
+    #fireflies, #birds {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      pointer-events: none;
+      display: block; /* Ensure the firefly and bird effects are visible */
+    }
+
+    .project-card {
+      position: relative;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    .project-card.fire::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://cdn.jsdelivr.net/npm/fire-effect@1.0.0/dist/fire.gif') no-repeat center center;
+      background-size: cover;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .project-card.fire.active::before {
+      opacity: 1;
+    }
+  </style>
 </head>
 <body>
+<div class="mode-toggle">
+  <button id="toggleMode">🌙</button>
+</div>
 
-  <div class="mode-toggle">
-    <button id="toggleMode">🌙</button>
+<header>
+  <div class="profile-container">
+    <img src="assets/profile.png" alt="Profile Picture" class="profile-image" id="profilePicture">
+    <h1 class="name">ROBERTH NAMOC</h1>
+    <p class="tagline">Front-End Designer | Web & System Developer</p>
+    <div class="social-media">
+      <a href="https://www.facebook.com/6xpencer" target="_blank">
+        <img src="assets/facebook.png" alt="Facebook">
+      </a>
+      <a href="https://x.com/RoberthPendrin4" target="_blank">
+        <img src="assets/twitter.png" alt="Twitter">
+      </a>
+      <a href="https://www.linkedin.com/in/spencer-scott-5478b8264/edit/forms/intro/new/?profileFormEntryPoint=PROFILE_SECTION" target="_blank">
+        <img src="assets/linkedin.png" alt="LinkedIn">
+      </a>
+      <a href="https://github.com/quadratic03" target="_blank">
+        <img src="assets/github.png" alt="GitHub">
+      </a>
+    </div>
   </div>
+</header>
 
-  <header>
-    <div class="profile-container">
-      <img src="assets/profile.png" alt="Profile Picture" class="profile-image" id="profilePicture">
-      <h1 class="name">Roberth Namoc</h1>
-      <p class="tagline">Front-End Designer | Web & System Developer</p>
+<div id="profileDialog" class="dialog">
+  <div class="dialog-content">
+    <h2>My Details</h2>
+    <p><strong>Name:</strong> Roberth Namoc</p>
+    <p><strong>Age:</strong> 24</p>
+    <p><strong>Email:</strong> Kristinedais10@gmail.com</p>
+    <p><strong>Contact:</strong> +639853234710</p>
+    <p><strong>Location:</strong> Cagayan de oro, Philippines</p>
+    <button id="backButton" class="back-btn">Back</button>
+  </div>
+</div>
+
+<section id="about">
+  <h2>About Me</h2>
+  <p>
+    I am an IT student with a passion for designing and developing user-friendly websites and systems. 
+    I have completed numerous projects that showcase my skills in front-end design, web development, 
+    and system architecture.
+  </p>
+</section>
+
+<section id="skills">
+  <div id="particles-js"></div>
+  <div id="fireflies"></div>
+  <div id="birds"></div>
+  <h2>Skills</h2>
+  <ul class="skills-list">
+    <li data-video="assets/videos/html5.mp4">HTML5</li>
+    <li data-video="assets/videos/css3.mp4">CSS</li>
+    <li data-video="assets/videos/javascript.mp4">JavaScript (ES6+)</li>
+    <li data-video="assets/videos/reactjs.mp4">React.js</li>
+    <li>Node.js</li>
+    <li>Express.js</li>
+    <li>MySQL</li>
+    <li>Figma</li>
+    <li>Canva</li>
+    <li>NoSQL</li>
+    <li>Git & GitHub</li>
+    <li>Responsive Design</li>
+    <li>UI/UX Design</li>
+    <li>SQL/Database</li>
+    <li>Dart(Flutter)</li>
+  </ul>
+</section>
+
+<section id="projects">
+  <h2>Projects</h2>
+  <div class="project-grid">
+    <div class="project-card fire">
+      <h3>Project 1: E-commerce Website</h3>
+      <p>A fully functional e-commerce platform built using React.js and Node.js.</p>
     </div>
-  </header>
-
- 
-  <div id="profileDialog" class="dialog">
-    <div class="dialog-content">
-      <h2>My Details</h2>
-      <p><strong>Name:</strong> Roberth Namoc</p>
-      <p><strong>Age:</strong> 24</p>
-      <p><strong>Email:</strong> Kristinedais10@gmail.com</p>
-      <p><strong>Contact:</strong> +639853234710</p>
-      <p><strong>Location:</strong> Cagayan de oro, Philippines</p>
-      <button id="backButton" class="back-btn">Back</button>
+    <div class="project-card fire">
+      <h3>Project 2: Task Management System</h3>
+      <p>A task management application designed with MongoDB and Express.js.</p>
+    </div>
+    <div class="project-card fire">
+      <h3>Project 3: Personal Portfolio</h3>
+      <p>This portfolio website showcasing my skills and projects.</p>
     </div>
   </div>
+</section>
 
-  <section id="about">
-    <h2>About Me</h2>
-    <p>
-      I am an IT student with a passion for designing and developing user-friendly websites and systems. 
-      I have completed numerous projects that showcase my skills in front-end design, web development, 
-      and system architecture.
-    </p>
-  </section>
+<footer>
+  <p>&copy;Property of NAMOC ROBERTH</p>
+</footer>
 
-  <section id="skills">
-    <h2>Skills</h2>
-    <ul class="skills-list">
-      <li data-video="assets/videos/html5.mp4">HTML5</li>
-      <li data-video="assets/videos/css3.mp4">CSS3</li>
-      <li data-video="assets/videos/javascript.mp4">JavaScript (ES6+)</li>
-      <li data-video="assets/videos/reactjs.mp4">React.js</li>
-      <li>Node.js</li>
-      <li>Express.js</li>
-      <li>MongoDB</li>
-      <li>Git & GitHub</li>
-      <li>Responsive Design</li>
-      <li>UI/UX Design</li>
-      <li>SQL/Database</li>
-      <li>Dart(Flutter)</li>
-    </ul>
-  </section>
+<script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fire-effect@1.0.0/dist/fire.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const skillItems = document.querySelectorAll('.skills-list li');
+    const projectCards = document.querySelectorAll('.project-card');
+    const toggleModeButton = document.getElementById('toggleMode');
+    const profileContainer = document.querySelector('.profile-container');
+    const firefliesContainer = document.getElementById('fireflies');
+    const birdsContainer = document.getElementById('birds');
 
-  <section id="projects">
-    <h2>Projects</h2>
-    <div class="project-grid">
-      <div class="project-card">
-        <h3>Project 1: E-commerce Website</h3>
-        <p>A fully functional e-commerce platform built using React.js and Node.js.</p>
-      </div>
-      <div class="project-card">
-        <h3>Project 2: Task Management System</h3>
-        <p>A task management application designed with MongoDB and Express.js.</p>
-      </div>
-      <div class="project-card">
-        <h3>Project 3: Personal Portfolio</h3>
-        <p>This portfolio website showcasing my skills and projects.</p>
-      </div>
-    </div>
-  </section>
+    skillItems.forEach(item => {
+      item.addEventListener('click', () => {
+        item.classList.add('explode');
+        setTimeout(() => {
+          item.style.display = 'none';
+          setTimeout(() => {
+            item.classList.remove('explode');
+            item.classList.add('smoke');
+            item.style.display = 'inline-block';
+            setTimeout(() => {
+              item.classList.remove('smoke');
+              item.classList.add('fade-out');
+              setTimeout(() => {
+                item.classList.remove('fade-out');
+              }, 1000); // Time for the fade-out animation
+            }, 1000); // Time for the smoke animation
+          }, 500); // 0.5 seconds for the bubble to return
+        }, 500);
+      });
+    });
 
-  <footer>
-    <p>&copy;Property of NAMOC ROBERTH</p>
-  </footer>
+    projectCards.forEach(card => {
+      card.addEventListener('click', () => {
+        card.classList.add('active');
+      });
+    });
 
-  <script src="script.js"></script>
+    toggleModeButton.addEventListener('click', () => {
+      document.body.classList.toggle('night-mode');
+      profileContainer.classList.toggle('night-mode');
+      profileContainer.classList.toggle('light-mode');
+      if (document.body.classList.contains('night-mode')) {
+        firefliesContainer.style.display = 'block';
+        birdsContainer.style.display = 'none';
+        fireflyEffect(firefliesContainer, { color: '#ffdd44', count: 20 });
+      } else {
+        firefliesContainer.style.display = 'none';
+        birdsContainer.style.display = 'block';
+        birdAnimation(birdsContainer, { color: '#000000', count: 10 });
+      }
+    });
+
+    particlesJS('particles-js', {
+      particles: {
+        number: {
+          value: 80,
+          density: {
+            enable: true,
+            value_area: 800
+          }
+        },
+        color: {
+          value: '#ffffff'
+        },
+        shape: {
+          type: 'circle',
+          stroke: {
+            width: 0,
+            color: '#000000'
+          },
+          polygon: {
+            nb_sides: 5
+          },
+          image: {
+            src: 'img/github.svg',
+            width: 100,
+            height: 100
+          }
+        },
+        opacity: {
+          value: 0.5,
+          random: false,
+          anim: {
+            enable: false,
+            speed: 1,
+            opacity_min: 0.1,
+            sync: false
+          }
+        },
+        size: {
+          value: 3,
+          random: true,
+          anim: {
+            enable: false,
+            speed: 40,
+            size_min: 0.1,
+            sync: false
+          }
+        },
+        line_linked: {
+          enable: true,
+          distance: 150,
+          color: '#ffffff',
+          opacity: 0.4,
+          width: 1
+        },
+        move: {
+          enable: true,
+          speed: 6,
+          direction: 'none',
+          random: false,
+          straight: false,
+          out_mode: 'out',
+          bounce: false,
+          attract: {
+            enable: false,
+            rotateX: 600,
+            rotateY: 1200
+          }
+        }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: {
+          onhover: {
+            enable: true,
+            mode: 'repulse'
+          },
+          onclick: {
+            enable: true,
+            mode: 'push'
+          },
+          resize: true
+        },
+        modes: {
+          grab: {
+            distance: 400,
+            line_linked: {
+              opacity: 1
+            }
+          },
+          bubble: {
+            distance: 400,
+            size: 40,
+            duration: 2,
+            opacity: 8,
+            speed: 3
+          },
+          repulse: {
+            distance: 200,
+            duration: 0.4
+          },
+          push: {
+            particles_nb: 4
+          },
+          remove: {
+            particles_nb: 2
+          }
+        }
+      },
+      retina_detect: true
+    });
+
+    // Initialize with light mode birds
+    birdAnimation(birdsContainer, { color: '#000000', count: 10 });
+  });
+</script>
 </body>
 </html>
